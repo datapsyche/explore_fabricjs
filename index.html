@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>explore fabricjs</title>
+    <script src="fabric.min.js"></script>
+</head>
+<body>
+    <div>Testing</div>
+    <canvas id="c" width="1200" height="800"></canvas>
+
+
+
+
+    <script>
+        const ZODIAC = {
+            "21": "മേടം",
+            "31": "ഇടവം",
+            "41": "മിഥുനം",
+            "42": "കർക്കിടകം",
+            "43": "ചിങ്ങം",
+            "44": "കന്നി",
+            "34": "തുലാം",
+            "24": "വൃശ്ചികം",
+            "14": "ധനു",
+            "13": "മകരം",
+            "12": "കുംഭം",
+            "11": "മീനം"
+        }
+        const canvas = new fabric.Canvas('c');
+
+        function createHouse(i, j){
+            const width = 120
+            const height = 80
+            const rect = new fabric.Rect({
+                left: i*width,
+                top: j*height,
+                fill: 'lightgrey',
+                width: width,
+                height: height,
+                stroke: '#666',
+            })
+            const text = new fabric.Text(ZODIAC[`${i}${j}`], {
+                left: i*width + width/8,
+                top: j*height + height/1.5,
+                fontSize: 15,
+            })
+            const house = new fabric.Group([rect, text], {});
+            return house
+        }
+
+        // create base vedic chart squares
+        for (let i=1; i <= 4; i++){
+            for (let j=1; j <= 4; j++){
+                if ([2,3].includes(i)){
+                    if (!([2,3].includes(j))){
+                        house = createHouse(i,j)
+                        console.log(house)
+                        canvas.add(house)
+                    }
+                } else {
+                    house = createHouse(i,j)
+                    canvas.add(house)
+                }
+            }
+        } 
+        // const rect = new fabric.Rect({
+        //     left: 20,
+        //     top: 20,
+        //     fill: 'grey',
+        //     width: 120,
+        //     height: 80
+        // });
+        // canvas.add(rect);
+        // console.log("testing")
+    </script>
+    
+</body>
+</html>
