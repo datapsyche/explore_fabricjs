@@ -28,26 +28,74 @@
             "12": "കുംഭം",
             "11": "മീനം"
         }
-        const canvas = new fabric.Canvas('c');
+
+        const PLANETS = {
+            "0": "ല",
+            "1": "ച",
+            "2": "ര",
+            "3": "ബു",
+            "4": "ശു",
+            "5": "കു",
+            "6": "ഗു",
+            "7": "ശ",
+            "8": "രാ",
+            "9": "കേ"
+        }
+        
+        Dim = 100
+        const canvasDimension = [Dim*8, Dim*6]
+        const canvas = new fabric.Canvas('c',{
+            backgroundColor: "lightgrey",
+            width: canvasDimension[0],
+            height: canvasDimension[1],
+            
+        
+        });
 
         function createHouse(i, j){
-            const width = 120
-            const height = 80
+            const width = Dim
+            const height = Dim*.75
             const rect = new fabric.Rect({
                 left: i*width,
                 top: j*height,
-                fill: 'lightgrey',
+                fill: 'white',
                 width: width,
                 height: height,
                 stroke: '#666',
             })
-            const text = new fabric.Text(ZODIAC[`${i}${j}`], {
-                left: i*width + width/8,
-                top: j*height + height/1.5,
-                fontSize: 15,
+            sign=ZODIAC[`${i}${j}`]
+            const text = new fabric.Text(sign, {
+                left: i*width,
+                top: j*height,
+                fontSize: 12,
             })
             const house = new fabric.Group([rect, text], {});
             return house
+        }
+
+        function createPlanet(key){
+            const radius = Dim/10
+            const pos = [100, 500]
+            const pname = PLANETS[`${key}`]
+            const circle = new fabric.Circle({
+                left: pos[0] + key*50,
+                top: pos[1],
+                originX: 'center',
+                originY: 'center',
+                radius: radius,
+                fill: 'white',
+                stroke: '#666',
+            });
+            const name = new fabric.Text(pname, {
+                fontFamily: 'Calibri',
+                fontSize: 10,
+                left: pos[0] + key*50,
+                top: pos[1],
+                originX: 'center',
+                originY: 'center',
+            });
+            const planet = new fabric.Group([circle, name], {});
+            return planet
         }
 
         // create base vedic chart squares
@@ -64,7 +112,13 @@
                     canvas.add(house)
                 }
             }
-        } 
+        }
+
+        for (let i=1; i<10; i++){
+            const planet = createPlanet(i)
+            canvas.add(planet)
+        }
+
         // const rect = new fabric.Rect({
         //     left: 20,
         //     top: 20,
