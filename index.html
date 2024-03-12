@@ -8,6 +8,7 @@
 </head>
 <body>
     <div>Testing</div>
+    <button type="button" onclick="generateChart()">Generate Chart</button>
     <canvas id="c" width="1200" height="800"></canvas>
 
 
@@ -55,6 +56,7 @@
         function createHouse(i, j){
             const width = Dim
             const height = Dim*.75
+            const sign=ZODIAC[`${i}${j}`]
             const rect = new fabric.Rect({
                 left: i*width,
                 top: j*height,
@@ -63,19 +65,23 @@
                 height: height,
                 stroke: '#666',
             })
-            sign=ZODIAC[`${i}${j}`]
+
             const text = new fabric.Text(sign, {
-                left: i*width,
-                top: j*height,
+                left: i*width + Dim/50,
+                top: j*height + Dim/1.6,
                 fontSize: 12,
             })
-            const house = new fabric.Group([rect, text], {});
+            const house = new fabric.Group([rect, text], {
+                id: sign,
+                lockMovementX: true,
+                lockMovementY: true,
+            });
             return house
         }
 
         function createPlanet(key){
             const radius = Dim/10
-            const pos = [100, 500]
+            const pos = [Dim, Dim*5]
             const pname = PLANETS[`${key}`]
             const circle = new fabric.Circle({
                 left: pos[0] + key*50,
@@ -94,7 +100,7 @@
                 originX: 'center',
                 originY: 'center',
             });
-            const planet = new fabric.Group([circle, name], {});
+            const planet = new fabric.Group([circle, name], { id: pname});
             return planet
         }
 
@@ -104,7 +110,6 @@
                 if ([2,3].includes(i)){
                     if (!([2,3].includes(j))){
                         house = createHouse(i,j)
-                        console.log(house)
                         canvas.add(house)
                     }
                 } else {
@@ -114,20 +119,32 @@
             }
         }
 
+        // create planets 
         for (let i=1; i<10; i++){
             const planet = createPlanet(i)
             canvas.add(planet)
         }
 
-        // const rect = new fabric.Rect({
-        //     left: 20,
-        //     top: 20,
-        //     fill: 'grey',
-        //     width: 120,
-        //     height: 80
-        // });
-        // canvas.add(rect);
-        // console.log("testing")
+        function generateChart() {
+            console.log("generating chart randomly")
+            canvas.getObjects().forEach(function(o) {
+                Object.keys(PLANETS).forEach(function(p){
+                    if(o.id == PLANETS[p]){
+                        console.log(o)
+                        o.animate("left", o.left+100,{
+                            onChange:canvas.renderAll.bind(canvas)
+                        });
+                    }
+                })
+                // if(o.id != 'rekt') {
+                //     canvas.setActiveObject(o);
+                //     console.log(o.id)
+                // }
+                
+            })
+
+        }
+
     </script>
     
 </body>
